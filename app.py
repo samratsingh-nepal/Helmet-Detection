@@ -4,40 +4,40 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# Load the pretrained model
-model = YOLO('best.pt')  # Make sure the path to the model is correct
+
+model = YOLO('best.pt')  # Loading pre-trained model
 
 st.title("YOLOv8 Helmet Detection with Streamlit")
 
-# Upload image
-uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
+
+uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"]) # Upload image
 
 def detect_helmet(image):
     img_array = np.array(image)  # Convert PIL image to numpy array (OpenCV format)
     
-    # Run detection model
-    results = model(img_array)  
+   
+    results = model(img_array)   # Run detection model
     
-    # Use plot method to visualize results
-    result_img = results[0].plot()  # This plots the detected bounding boxes on the image
+    
+    result_img = results[0].plot()  # detects bounding boxes on the image
     
     return result_img
 
 if uploaded_image is not None:
-    # Open the uploaded image
-    image = Image.open(uploaded_image)
+   
+    image = Image.open(uploaded_image)  # Open the uploaded image
     
-    # Display the uploaded image
-    st.image(image, caption="Uploaded Image", use_column_width=True)
+  
+    st.image(image, caption="Uploaded Image", use_column_width=True)   # Display the uploaded image
 
-    # Detect objects
-    st.write("Detecting objects...")
+   
+    st.write("Detecting Helmets...")  # Detect Helmet
     result_img = detect_helmet(image)
 
-    # Convert the result (numpy array) back to a PIL image for display
-    result_pil_image = Image.fromarray(result_img)
     
-    # Display the result image with detections
-    st.image(result_pil_image, caption="Detected Objects", use_column_width=True)
+    result_pil_image = Image.fromarray(result_img) # Convert numpy array back to a PIL image for display
+    
+    
+    st.image(result_pil_image, caption="Detected Objects", use_column_width=True) # Display the result image with detections
 
 st.markdown("Powered by YOLOv8 and Streamlit")
