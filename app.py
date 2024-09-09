@@ -4,39 +4,30 @@ import cv2
 import numpy as np
 from PIL import Image
 
-# Load the YOLOv8 model (pretrained on COCO dataset)
-model = YOLO('best.pt')  # You can replace this with your own model
 
-# Streamlit App Title
-st.title("YOLOv8 Object Detection with Streamlit")
+model = YOLO('best.pt')  # pretrained for helmet detection
 
-# Upload image
-uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
+st.title("YOLOv8 Helmet Detection with Streamlit")
 
-# Function to run YOLOv8 inference and return image with boxes
-def detect_objects(image):
-    # Convert PIL image to numpy array (OpenCV format)
-    img_array = np.array(image)
+
+uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"]) # Upload image
+
+def detect_helmet(image):
+   
+    img_array = np.array(image)  # Convert PIL image to numpy array (OpenCV format)
     
-    # Run YOLOv8 inference
-    results = model(img_array)
+    results = model(img_array)   # Run best.pt model
 
-    # Get bounding boxes and labels from the results
-    annotated_frame = results[0].plot()  # Draw bounding boxes on the image
-
-    return annotated_frame
+    return results
 
 if uploaded_image is not None:
-    # Display uploaded image
-    image = Image.open(uploaded_image)
+    image = Image.open(uploaded_image)  # Display uploaded image
     st.image(image, caption="Uploaded Image", use_column_width=True)
 
-    # Run YOLOv8 model on the uploaded image
+   
     st.write("Detecting objects...")
-    result_img = detect_objects(image)
-
-    # Display the output with bounding boxes
+    result_img = detect_helmet(image)
+    
     st.image(result_img, caption="Detected Objects", use_column_width=True)
 
-# Add a footer
 st.markdown("Powered by YOLOv8 and Streamlit")
