@@ -28,7 +28,8 @@ if uploaded_image is not None:
    
     st.write("Detecting objects...")
     result_img = detect_helmet(image)
+    result_pil_image = Image.fromarray(result_img)
     
-    st.image(result_img, caption="Detected Objects", use_column_width=True)
+    st.image(result_pil_image, caption="Detected Objects", use_column_width=True)
 
 st.markdown("Powered by YOLOv8 and Streamlit")
