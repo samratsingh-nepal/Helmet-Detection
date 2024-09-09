@@ -19,7 +19,7 @@ def detect_helmet(image):
     results = model(img_array)   # Run best.pt model
     result_img = results[0].plot() 
 
-    return results
+    return results_img
 
 if uploaded_image is not None:
     image = Image.open(uploaded_image)  # Display uploaded image
