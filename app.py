@@ -13,10 +13,8 @@ st.title("YOLOv8 Helmet Detection with Streamlit")
 uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"]) # Upload image
 
 def detect_helmet(image):
-   
-    img_array = np.array(image)  # Convert PIL image to numpy array (OpenCV format)
     
-    results = model(img_array)   # Run best.pt model
+    results = model(image)   # Run best.pt model
     
     return results
 
