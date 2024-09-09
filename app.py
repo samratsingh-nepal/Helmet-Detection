@@ -17,9 +17,8 @@ def detect_helmet(image):
     img_array = np.array(image)  # Convert PIL image to numpy array (OpenCV format)
     
     results = model(img_array)   # Run best.pt model
-    result_img = results[0].plot() 
-
-    return result_img
+    
+    return results
 
 if uploaded_image is not None:
     image = Image.open(uploaded_image)  # Display uploaded image
@@ -28,8 +27,8 @@ if uploaded_image is not None:
    
     st.write("Detecting objects...")
     result_img = detect_helmet(image)
-    result_pil_image = Image.fromarray(result_img)
-    
-    st.image(result_pil_image, caption="Detected Objects", use_column_width=True)
+    image = Image.open(result_img)  # Display final image
+    st.image(image, caption="Final Image", use_column_width=True)
+   
 
 st.markdown("Powered by YOLOv8 and Streamlit")
