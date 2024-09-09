@@ -17,6 +17,7 @@ def detect_helmet(image):
     img_array = np.array(image)  # Convert PIL image to numpy array (OpenCV format)
     
     results = model(img_array)   # Run best.pt model
+    result_img = results[0].plot() 
 
     return results
 
