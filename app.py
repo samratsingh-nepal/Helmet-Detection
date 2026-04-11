@@ -3,41 +3,42 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 from PIL import Image
+import os
 
+# Load model with error handling
+model_path = 'best.pt'
+if not os.path.exists(model_path):
+    st.error(f"Model file '{model_path}' not found. Please upload or provide the model.")
+    st.stop()
 
-model = YOLO('best.pt')  # Loading pre-trained model
+try:
+    model = YOLO(model_path)
+except Exception as e:
+    st.error(f"Failed to load model: {e}")
+    st.stop()
 
 st.title("YOLOv8 Helmet Detection with Streamlit")
 
-
-uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"]) # Upload image
+uploaded_image = st.file_uploader("Upload an Image", type=["jpg", "jpeg", "png"])
 
 def detect_helmet(image):
-    img_array = np.array(image)  # Convert PIL image to numpy array (OpenCV format)
-    
-   
-    results = model(img_array)   # Run detection model
-    
-    
-    result_img = results[0].plot()  # detects bounding boxes on the image
-    
-    return result_img
+    # Convert PIL image to numpy array (RGB)
+    img_array = np.array(image)
+    # Run inference
+    results = model(img_array)
+    # Plot bounding boxes on the image (returns BGR numpy array)
+    result_img_bgr = results[0].plot()
+    # Convert BGR to RGB for correct display in Streamlit
+    result_img_rgb = cv2.cvtColor(result_img_bgr, cv2.COLOR_BGR2RGB)
+    return result_img_rgb
 
 if uploaded_image is not None:
-   
-    image = Image.open(uploaded_image)  # Open the uploaded image
-    
-  
-    st.image(image, caption="Uploaded Image", use_column_width=True)   # Display the uploaded image
+    image = Image.open(uploaded_image)
+    st.image(image, caption="Uploaded Image", use_column_width=True)
 
-   
-    st.write("Detecting Helmets...")  # Detect Helmet
-    result_img = detect_helmet(image)
+    with st.spinner("Detecting helmets..."):
+        result_img = detect_helmet(image)
 
-    
-    result_pil_image = Image.fromarray(result_img) # Convert numpy array back to a PIL image for display
-    
-    
-    st.image(result_pil_image, caption="Detected Objects", use_column_width=True) # Display the result image with detections
+    st.image(result_img, caption="Detected Objects", use_column_width=True)
 
 st.markdown("Powered by YOLOv8 and Streamlit")
